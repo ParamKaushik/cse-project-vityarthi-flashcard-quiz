@@ -1,76 +1,143 @@
-
-import random
 import time
+import random
 
-#ADDING SOME DEFAULT QUESTIONS RELATED TO THE SUBJECR
+# Flashcards (manual options)
 flashcards = {
-    "what circuit element controls the flow of current?":"resistor",
-    "In thevenins theorem, what is resistance for the final simplified circuit called?":"Thevenins Resistance",
-    "What is the chemical symbol for water?":"H2O", "how many laws of thermodynamics are there":"Four"
+    "What is the capital of France?": {
+        "answer": "Paris",
+        "options": ["London", "Paris", "Berlin", "Rome"]
+    },
+    "What is 5 + 7?": {
+        "answer": "12",
+        "options": ["10", "11", "12", "13"]
+    },
+    "What is the chemical symbol for water?": {
+        "answer": "H2O",
+        "options": ["CO2", "O2", "H2O", "NaCl"]
+    }
 }
 
-print("Welcome to the Flashcard Quiz")
-#NOW,THEY CAN ADD FLASHCARDS OF THEIR OWN IF THEY WANT TO.
-while True:
-    add = input("Would you like to add a flashcard? (yes/no): ").lower() #AVOIDS WRONG ANSWER FOR CAPATALIZATION
-    if add=="yes":
-        question=input("Enter the question: ")
-        answer=input("Enter the answer: ")
-        flashcards[question] = answer
-        print("Flashcard added!\n")
-    elif add =="no":
-        break
-    else:
-        print("Please answer with 'yes' or 'no'.")
+FAST_THRESHOLD = 3
+FAST_BONUS = 1
 
-print("\nGreat! Let's start the quiz.")#/n-ADDS SPACING
-print("Type 'quit' anytime to exit.")
-print("-" * 40)
+# Input validation
+def get_valid_input(prompt, valid=None):
+    while True:
+        ans = input(prompt).strip()
 
-#SETTING UP THE QUIZ AND THE INBITIAL SCORE TO 0 WHICH WILL BE INCREMENTED WIT EVERY CORECT ANSWER
-questions =list(flashcards.keys())
-score=0
-total_questions=0
-TIME_LIMIT=10 #giving 10 seconds per question, otherwise marks dont count
+        if ans.lower() == "quit":
+            return "quit"
 
-while True:
-    question=random.choice(questions)
-    correct_answer=flashcards[question]
+        if valid is None or ans.lower() in valid:
+            return ans.lower()
 
-    print("\nQuestion:",question)
+        print("Invalid input, try again.")
 
-    #ADDING A 10 SEOND TIME LIMIT
-    start_time = time.time()
-    user_answer=input("Your answer: ")
-    end_time=time.time()
+# Add a flashcard
+def add_flashcard():
+    print("\n--- Add Flashcard ---")
     
-    if user_answer.lower()=="quit":
-        break
+    question =input("Question: ").strip()
+    if question.lower() == "quit":
+        return
 
-    total_questions += 1
-    time_taken = end_time - start_time
+    answer=input("Correct answer: ").strip()
+    if answer.lower() == "quit":
+        return
 
-    if time_taken>TIME_LIMIT:
-        print(f"Too slow! You took {time_taken:.2f} seconds.")
-        print("Correct answer:", correct_answer)
-        continue
+    print("Enter FOUR options (including the correct one).")
+    options = []
+    for i in range(4):
+        opt = input(f"Option {i+1}: ").strip()
+        if opt.lower() == "quit":
+            return
+        options.append(opt)
 
-    if user_answer.lower() == correct_answer.lower():
+    flashcards[question] = {"answer": answer, "options": options}
+    print("Flashcard added!\n")
+
+# View flashcards
+def view_flashcards():
+    print("\n--- Flashcards ---")
+    for i, (q, data) in enumerate(flashcards.items(), start=1):
+        print(f"{i}. {q}  →  {data['answer']}")
+    print()
+
+# Ask a single question
+def ask_question(question, data):
+    print("\nQuestion:", question)
+    opts = data["options"]
+
+    for i, opt in enumerate(opts):
+        print(f"{i+1}. {opt}")
+
+    start = time.time()
+    ans = get_valid_input("Your answer (1-4): ", valid=["1", "2", "3", "4"])
+    end = time.time()
+
+    if ans == "quit":
+        return "quit", 0
+
+    chosen = opts[int(ans) - 1]
+    correct = data["answer"]
+
+    if chosen.lower() == correct.lower():
         print("Correct!")
-        score += 1
+        points = 1
+
+        if end - start <= FAST_THRESHOLD:
+            points += FAST_BONUS
+            print("Fast answer bonus!")
+
+        return True, points
     else:
-        print("Incorrect.")
-        print("Correct answer:",correct_answer)
+        print("Wrong!")
+        print("Correct answer:", correct)
+        return False, 0
 
-#SHOWING THE FINAL SCORE
-print("\n Quiz Complete")
-print("Correct answers:",score)
-print("Total questions answered:",total_questions)
 
-if total_questions>0:
-    percentage = (score / total_questions) * 100
-    print(f"Score percentage: {percentage:.2f}%")
-else:
-    print("No questions were answered.")
+# Run quiz
+def start_quiz():
+    score = 0
+    total = 0
 
-print("Thanks for playing!")
+    questions = list(flashcards.items())
+    random.shuffle(questions)
+
+    print("\nStarting quiz (type 'quit' anytime)\n")
+
+    for q, data in questions:
+        result, pts = ask_question(q, data)
+
+        if result == "quit":
+            break
+
+        total += 1
+        score += pts
+
+    print("\nQuiz finished!")
+    print(f"Score: {score}/{total}")
+    print()
+
+# Main menu
+def main():
+    while True:
+        print("1. Start Quiz")
+        print("2. Add Flashcard")
+        print("3. View Flashcards")
+        print("4. Quit")
+
+        choice =get_valid_input("Choose: ", valid=["1", "2", "3", "4"])
+        if choice == "1":
+            start_quiz()
+        elif choice== "2":
+            add_flashcard()
+        elif choice== "3":
+            view_flashcards()
+        elif choice== "4":
+            print("Bye!")
+            break
+
+
+if __name__ =="__main__":
+    main()
