@@ -2,11 +2,11 @@
 
 ## Problem Statement
 Many students struggle to memorize information effectively when studying. Traditional methods like writing notes or reading textbooks can become repetitive and boring.  
-This project aims to solve this problem by creating an interactive **Flashcard Quiz Program** in Python, allowing users to test their knowledge in a fun and engaging way. The program provides immediate feedback, randomizes questions, and keeps track of user performance.
+This project aims to solve this problem by creating an interactive **Flashcard Quiz Program** in Python, allowing users to test their knowledge in a fun and engaging way. The program provides immediate feedback, randomizes questions, and keeps track of user performance..
 
 ---
 
-## Scope of the Project
+## Scope of the Project:
 This project focuses on building a **beginner-friendly, console-based quiz application** using only fundamental Python concepts such as:
 
 - Dictionaries  
