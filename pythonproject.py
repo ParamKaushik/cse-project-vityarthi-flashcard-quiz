@@ -5,14 +5,14 @@ import random
 flashcards = {
     "What is the capital of France?": {
         "answer": "Paris",
-        "options": ["London", "Paris", "Berlin", "Rome"]
+        "options": ["London.", "Paris.", "Berlin", "Rome"]
     },
     "What is 5 + 7?": {
         "answer": "12",
         "options": ["10", "11", "12", "13"]
     },
     "What is the chemical symbol for water?": {
-        "answer": "H2O",
+        "answer:": "H2O",
         "options": ["CO2", "O2", "H2O", "NaCl"]
     }
 }
