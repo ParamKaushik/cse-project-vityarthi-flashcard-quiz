@@ -3,7 +3,7 @@
 ## Overview
 The Flashcard Quiz App is a simple Python-based application designed to help students learn and memorize information through interactive quizzes. Users can create custom flashcards with questions and answers, take quizzes, and receive instant feedback on their performance. This project was developed as part of PYTHON ESSENTIALS to apply fundamental programming concepts including data structures, loops, conditionals, and user input handling.
 
-## Features
+## Features are:
 - Store multiple flashcards with question-answer pairs
 - Interactive quiz interface through command line
 - Instant feedback on correct/incorrect answers
